@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>英语填字游戏</title>
     
-    <!-- CSS样式文件 -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/animations.css">
@@ -13,7 +12,6 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- 头部 -->
         <header class="header">
             <div class="header-title">
                 <h1>📝 英语填字游戏</h1>
@@ -40,6 +38,11 @@
                     <span>提示</span>
                 </button>
                 
+                <button id="btn-reveal" class="btn btn-danger">
+                    <span class="btn-icon">🔓</span>
+                    <span>答案</span>
+                </button>
+
                 <button id="btn-reset" class="btn btn-secondary">
                     <span class="btn-icon">🔄</span>
                     <span>重置</span>
@@ -51,21 +54,17 @@
             </div>
         </header>
         
-        <!-- 主内容 -->
         <main class="main-content">
-            <!-- 网格区域 -->
             <section class="grid-section">
                 <div class="grid-wrapper">
                     <div id="grid-container">
-                        <!-- 网格由JS动态生成 -->
-                    </div>
+                        </div>
                 </div>
                 <div id="current-word" class="current-word-display">
                     选择一个格子开始
                 </div>
             </section>
             
-            <!-- 提示区域 -->
             <aside class="hints-section">
                 <h2 class="hints-title">
                     <span class="hints-title-icon">📖</span>
@@ -75,20 +74,17 @@
                 <div class="hints-group">
                     <h3 class="hints-group-title">横向 (Across)</h3>
                     <ul id="hints-across" class="hints-list">
-                        <!-- 提示由JS动态生成 -->
-                    </ul>
+                        </ul>
                 </div>
                 
                 <div class="hints-group">
                     <h3 class="hints-group-title">纵向 (Down)</h3>
                     <ul id="hints-down" class="hints-list">
-                        <!-- 提示由JS动态生成 -->
-                    </ul>
+                        </ul>
                 </div>
             </aside>
         </main>
         
-        <!-- 状态栏 -->
         <footer class="status-bar">
             <div class="status-item">
                 <span class="status-item-icon">⏱️</span>
@@ -113,9 +109,8 @@
         </footer>
     </div>
     
-    <!-- 完成弹窗 -->
     <div id="complete-modal" class="modal-overlay">
-        <div class="modal">
+        <div class="modal complete-modal">
             <div class="modal-icon">🎉</div>
             <h2 class="modal-title">恭喜完成!</h2>
             <p class="modal-message">你成功完成了这个填字游戏</p>
@@ -139,7 +134,6 @@
         </div>
     </div>
     
-    <!-- 设置面板弹窗 -->
     <div id="settings-modal" class="modal-overlay">
         <div class="modal settings-modal">
             <div class="modal-header">
@@ -148,7 +142,6 @@
             </div>
             
             <div class="modal-body">
-                <!-- 语言设置 -->
                 <div class="setting-group">
                     <div class="setting-item">
                         <div class="setting-label">
@@ -163,7 +156,6 @@
                     </div>
                 </div>
                 
-                <!-- 音效设置 -->
                 <div class="setting-group">
                     <div class="setting-item">
                         <div class="setting-label">
@@ -187,7 +179,6 @@
                     </div>
                 </div>
                 
-                <!-- 显示设置 -->
                 <div class="setting-group">
                     <div class="setting-item">
                         <div class="setting-label">
@@ -223,7 +214,6 @@
                     </div>
                 </div>
                 
-                <!-- 游戏设置 -->
                 <div class="setting-group">
                     <div class="setting-item">
                         <div class="setting-label">
@@ -237,7 +227,6 @@
                     </div>
                 </div>
                 
-                <!-- 数据管理 -->
                 <div class="setting-group">
                     <div class="setting-item">
                         <button id="btn-view-stats" class="btn btn-secondary btn-full">
@@ -268,7 +257,6 @@
         </div>
     </div>
     
-    <!-- 统计面板弹窗 -->
     <div id="statistics-modal" class="modal-overlay">
         <div class="modal statistics-modal">
             <div class="modal-header">
@@ -277,7 +265,6 @@
             </div>
             
             <div class="modal-body">
-                <!-- 总览统计 -->
                 <div class="stats-overview">
                     <div class="stat-card">
                         <div class="stat-value" id="stat-games-played">0</div>
@@ -297,7 +284,6 @@
                     </div>
                 </div>
                 
-                <!-- 连胜记录 -->
                 <div class="stats-section">
                     <h3>🔥 连胜记录</h3>
                     <div class="streak-display">
@@ -312,7 +298,6 @@
                     </div>
                 </div>
                 
-                <!-- 最佳时间 -->
                 <div class="stats-section">
                     <h3 data-i18n="statistics.bestTimes">🏆 最佳时间</h3>
                     <div class="best-times">
@@ -331,7 +316,6 @@
                     </div>
                 </div>
                 
-                <!-- 总用时 -->
                 <div class="stats-section">
                     <h3 data-i18n="statistics.totalTime">⏱️ 总用时</h3>
                     <div class="total-time" id="stat-total-time">0小时 0分钟</div>
@@ -346,10 +330,8 @@
         </div>
     </div>
     
-    <!-- 加载题库 -->
     <script src="data/puzzle_db_aa.js"></script>
     
-    <!-- JavaScript文件 - 按依赖顺序加载 -->
     <script src="js/storage.js"></script>
     <script src="js/game.js"></script>
     <script src="js/i18n.js"></script>

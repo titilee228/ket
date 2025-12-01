@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语填字游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 游戏容器 -->
+    <div class="game-container">
+        
+        <!-- 顶部标题和按钮 -->
+        <header class="header">
+            <h1>📝 英语填字游戏</h1>
+            <div class="controls">
+                <button id="btn-new-game" class="btn btn-primary">🎮 新游戏</button>
+                <select id="difficulty-select" class="difficulty-select">
+                    <option value="easy">简单</option>
+                    <option value="medium" selected>中等</option>
+                    <option value="hard">困难</option>
+                </select>
+                <button id="btn-check" class="btn btn-success">✓ 检查</button>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            
+            <!-- 左边：填字网格 -->
+            <section class="grid-section">
+                <div id="grid-container">
+                    <!-- 这里会用JavaScript生成填字格子 -->
+                    <p>加载中...</p>
+                </div>
+                <div id="current-word" class="current-word-display">
+                    点击格子开始游戏
+                </div>
+            </section>
+
+            <!-- 右边：提示列表 -->
+            <aside class="hints-section">
+                <h2>📖 单词提示</h2>
+                
+                <div class="hints-group">
+                    <h3>横向 (Across)</h3>
+                    <ul id="hints-across" class="hints-list">
+                        <!-- JavaScript会在这里生成提示 -->
+                    </ul>
+                </div>
+
+                <div class="hints-group">
+                    <h3>纵向 (Down)</h3>
+                    <ul id="hints-down" class="hints-list">
+                        <!-- JavaScript会在这里生成提示 -->
+                    </ul>
+                </div>
+            </aside>
+
+        </main>
+
+        <!-- 底部状态栏 -->
+        <footer class="status-bar">
+            <span>⏱️ 用时: <strong id="timer">00:00</strong></span>
+            <span>📊 进度: <strong id="progress">0/0</strong></span>
+        </footer>
+
+    </div>
+
+    <!-- 完成弹窗 -->
+    <div id="complete-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-icon">🎉</div>
+            <h2>恭喜完成！</h2>
+            <p>你成功完成了这个填字游戏</p>
+            <div class="modal-stats">
+                <div class="modal-stat">
+                    <div class="modal-stat-value" id="final-time">00:00</div>
+                    <div class="modal-stat-label">用时</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-value" id="final-words">0</div>
+                    <div class="modal-stat-label">单词数</div>
+                </div>
+            </div>
+            <button id="btn-next" class="btn btn-primary">下一题</button>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="puzzle_db.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<style type="text/css">
+    /* ==========================================
+   设置面板样式
+   ========================================== */
+
+.settings-modal {
+    max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: var(--spacing-md);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gray-500);
+    padding: 0;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--gray-800);
+}
+
+.setting-group {
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.setting-group:last-child {
+    border-bottom: none;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+}
+
+.setting-item.setting-sub {
+    padding-left: var(--spacing-lg);
+    opacity: 0.9;
+}
+
+.setting-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.95rem;
+}
+
+.setting-icon {
+    font-size: 1.1rem;
+}
+
+.setting-control {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    font-size: 0.9rem;
+}
+
+/* 开关样式 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gray-300);
+    transition: 0.3s;
+    border-radius: 28px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* 音量控制 */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.volume-control input[type="range"] {
+    width: 100px;
+}
+
+#volume-display {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    min-width: 40px;
+}
+
+/* 按钮 */
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-danger {
+    background: var(--error-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #E53935;
+}
+
+.modal-footer {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--gray-100);
+    text-align: center;
+}
+
+.version-info {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+</style>
+<!-- 设置按钮 -->
+<button id="btn-settings" class="btn btn-icon" data-i18n-title="buttons.settings">
+    ⚙️
+</button>
+
+<!-- 设置面板弹窗 -->
+<div id="settings-modal" class="modal-overlay">
+    <div class="modal settings-modal">
+        <div class="modal-header">
+            <h2 data-i18n="settings.title">设置</h2>
+            <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <!-- 语言设置 -->
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">🌐</span>
+                        <span data-i18n="settings.language">语言</span>
+                    </div>
+                    <select id="setting-language" class="setting-control">
+                        <option value="zh">中文</option>
+                        <option value="en">English</option>
+                        <option value="ja">日本語</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 音效设置 -->
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">🔊</span>
+                        <span data-i18n="settings.sound">音效</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-sound">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item setting-sub" id="volume-setting">
+                    <div class="setting-label">
+                        <span data-i18n="settings.soundVolume">音量</span>
+                    </div>
+                    <div class="volume-control">
+                        <input type="range" id="setting-volume" min="0" max="100" value="70">
+                        <span id="volume-display">70%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 显示设置 -->
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">✨</span>
+                        <span data-i18n="settings.animations">动画效果</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-animations">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">🌙</span>
+                        <span data-i18n="settings.darkMode">深色模式</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-dark-mode">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">⏱️</span>
+                        <span data-i18n="settings.showTimer">显示计时器</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-timer">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 游戏设置 -->
+            <div class="setting-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span class="setting-icon">✓</span>
+                        <span data-i18n="settings.autoCheck">自动检查</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-auto-check">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 数据管理 -->
+            <div class="setting-group">
+                <div class="setting-item">
+                    <button id="btn-view-stats" class="btn btn-secondary btn-full">
+                        <span>📊</span>
+                        <span data-i18n="buttons.statistics">统计数据</span>
+                    </button>
+                </div>
+                
+                <div class="setting-item">
+                    <button id="btn-export-data" class="btn btn-secondary btn-full">
+                        <span>📤</span>
+                        <span>导出数据</span>
+                    </button>
+                </div>
+                
+                <div class="setting-item">
+                    <button id="btn-reset-stats" class="btn btn-danger btn-full">
+                        <span>🗑️</span>
+                        <span data-i18n="statistics.reset">重置统计</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <p class="version-info">版本 1.0.0</p>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    /**
+ * 设置面板控制器
+ */
+const SettingsController = {
+    /**
+     * 初始化
+     */
+    init() {
+        this._bindEvents();
+        this._loadSettings();
+    },
+    
+    /**
+     * 绑定事件
+     */
+    _bindEvents() {
+        // 打开设置
+        document.getElementById('btn-settings')?.addEventListener('click', () => {
+            this.open();
+        });
+        
+        // 关闭设置
+        document.querySelectorAll('[data-close-modal]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.close();
+            });
+        });
+        
+        // 点击遮罩关闭
+        document.getElementById('settings-modal')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                this.close();
+            }
+        });
+        
+        // 语言切换
+        document.getElementById('setting-language')?.addEventListener('change', (e) => {
+            I18n.setLanguage(e.target.value);
+        });
+        
+        // 音效开关
+        document.getElementById('setting-sound')?.addEventListener('change', (e) => {
+            AudioManager.setEnabled(e.target.checked);
+            document.getElementById('volume-setting').style.display = 
+                e.target.checked ? 'flex' : 'none';
+        });
+        
+        // 音量调节
+        document.getElementById('setting-volume')?.addEventListener('input', (e) => {
+            const volume = e.target.value / 100;
+            AudioManager.setVolume(volume);
+            document.getElementById('volume-display').textContent = e.target.value + '%';
+        });
+        
+        // 动画开关
+        document.getElementById('setting-animations')?.addEventListener('change', (e) => {
+            AnimationManager.setEnabled(e.target.checked);
+            StorageManager.setSetting('animationsEnabled', e.target.checked);
+        });
+        
+        // 深色模式
+        document.getElementById('setting-dark-mode')?.addEventListener('change', (e) => {
+            ThemeManager.setDark(e.target.checked);
+        });
+        
+        // 显示计时器
+        document.getElementById('setting-timer')?.addEventListener('change', (e) => {
+            StorageManager.setSetting('showTimer', e.target.checked);
+            document.querySelector('.status-item:has(#timer)').style.display = 
+                e.target.checked ? 'flex' : 'none';
+        });
+        
+        // 自动检查
+        document.getElementById('setting-auto-check')?.addEventListener('change', (e) => {
+            StorageManager.setSetting('autoCheck', e.target.checked);
+        });
+        
+        // 查看统计
+        document.getElementById('btn-view-stats')?.addEventListener('click', () => {
+            this.close();
+            StatisticsController.open();
+        });
+        
+        // 导出数据
+        document.getElementById('btn-export-data')?.addEventListener('click', () => {
+            const data = StorageManager.exportData();
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'crossword_data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        
+        // 重置统计
+        document.getElementById('btn-reset-stats')?.addEventListener('click', () => {
+            if (confirm(I18n.t('statistics.resetConfirm'))) {
+                StorageManager.resetStatistics();
+                AudioManager.play('click');
+            }
+        });
+    },
+    
+    /**
+     * 加载设置到UI
+     */
+    _loadSettings() {
+        const settings = StorageManager.loadSettings();
+        
+        // 语言
+        const langSelect = document.getElementById('setting-language');
+        if (langSelect) langSelect.value = settings.language;
+        
+        // 音效
+        const soundCheck = document.getElementById('setting-sound');
+        if (soundCheck) soundCheck.checked = settings.soundEnabled;
+        
+        // 音量
+        const volumeRange = document.getElementById('setting-volume');
+        if (volumeRange) {
+            volumeRange.value = settings.soundVolume * 100;
+            document.getElementById('volume-display').textContent = 
+                Math.round(settings.soundVolume * 100) + '%';
+        }
+        
+        // 音量设置显示
+        const volumeSetting = document.getElementById('volume-setting');
+        if (volumeSetting) {
+            volumeSetting.style.display = settings.soundEnabled ? 'flex' : 'none';
+        }
+        
+        // 动画
+        const animCheck = document.getElementById('setting-animations');
+        if (animCheck) animCheck.checked = settings.animationsEnabled;
+        
+        // 深色模式
+        const darkCheck = document.getElementById('setting-dark-mode');
+        if (darkCheck) darkCheck.checked = settings.darkMode;
+        
+        // 计时器
+        const timerCheck = document.getElementById('setting-timer');
+        if (timerCheck) timerCheck.checked = settings.showTimer;
+        
+        // 自动检查
+        const autoCheck = document.getElementById('setting-auto-check');
+        if (autoCheck) autoCheck.checked = settings.autoCheck;
+    },
+    
+    /**
+     * 打开设置面板
+     */
+    open() {
+        this._loadSettings();
+        document.getElementById('settings-modal')?.classList.add('active');
+        AudioManager.play('click');
+    },
+    
+    /**
+     * 关闭设置面板
+     */
+    close() {
+        document.getElementById('settings-modal')?.classList.remove('active');
+    }
+};
+    
+</script>

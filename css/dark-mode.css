@@ -1,0 +1,96 @@
+/* ==========================================
+   深色模式样式
+   ========================================== */
+
+/* 深色模式变量 */
+[data-theme="dark"] {
+    --primary-color: #64B5F6;
+    --primary-dark: #42A5F5;
+    --primary-light: #1E3A5F;
+    
+    --secondary-color: #FFB74D;
+    --secondary-dark: #FFA726;
+    --secondary-light: #5D4037;
+    
+    --success-color: #81C784;
+    --success-light: #2E4A32;
+    --error-color: #E57373;
+    --error-light: #4A2C2C;
+    
+    --white: #1E1E1E;
+    --black: #E0E0E0;
+    --gray-50: #2D2D2D;
+    --gray-100: #333333;
+    --gray-200: #404040;
+    --gray-300: #505050;
+    --gray-400: #707070;
+    --gray-500: #909090;
+    --gray-600: #A0A0A0;
+    --gray-700: #C0C0C0;
+    --gray-800: #E0E0E0;
+    
+    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+/* 应用深色模式 */
+[data-theme="dark"] body {
+    background: var(--bg-gradient);
+}
+
+[data-theme="dark"] .header,
+[data-theme="dark"] .grid-section,
+[data-theme="dark"] .hints-section,
+[data-theme="dark"] .status-bar,
+[data-theme="dark"] .modal {
+    background: var(--white);
+    color: var(--black);
+}
+
+[data-theme="dark"] .cell {
+    border-color: var(--gray-400);
+}
+
+[data-theme="dark"] .cell.black {
+    background: #0a0a0a;
+}
+
+[data-theme="dark"] .cell-input {
+    color: var(--black);
+}
+
+[data-theme="dark"] .btn-secondary {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+[data-theme="dark"] .difficulty-select {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border-color: var(--gray-300);
+}
+
+[data-theme="dark"] .hint-item:hover {
+    background: var(--gray-200);
+}
+
+[data-theme="dark"] .crossword-grid {
+    border-color: var(--gray-500);
+}
+
+/* 滚动条深色模式 */
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-500);
+}

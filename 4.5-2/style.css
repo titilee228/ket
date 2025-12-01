@@ -1,0 +1,575 @@
+/* ===== 基础设置 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 15px;
+}
+
+/* ===== 游戏容器 ===== */
+.game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ===== 头部 ===== */
+.header {
+    background: white;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 1.6rem;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ===== 按钮样式 ===== */
+.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: #2196F3;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1976D2;
+}
+
+.btn-success {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #43A047;
+}
+
+/* ===== 难度选择 ===== */
+.difficulty-select {
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: white;
+}
+
+.difficulty-select:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+/* ===== 主内容区域 ===== */
+.main-content {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+/* ===== 网格区域 ===== */
+.grid-section {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+/* ===== 填字网格 - 18x18 ===== */
+.crossword-grid {
+    border-collapse: collapse;
+    border: 2px solid #333;
+}
+
+.cell {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    border: 1px solid #888;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    background: white;
+    padding: 0;
+}
+
+.cell.black {
+    background: #2c3e50;
+}
+
+.cell-number {
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    font-size: 9px;
+    color: #555;
+    font-weight: bold;
+    line-height: 1;
+    z-index: 1;
+}
+
+.cell-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: transparent;
+    color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+.cell-input:focus {
+    outline: none;
+}
+
+/* 选中的格子 */
+.cell.selected {
+    background: #FFE082 !important;
+}
+
+.cell.selected::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 2px solid #FF9800;
+    pointer-events: none;
+}
+
+/* 当前单词高亮 */
+.cell.highlighted {
+    background: #BBDEFB;
+}
+
+/* 正确答案 */
+.cell.correct {
+    background: #C8E6C9 !important;
+}
+
+.cell.correct .cell-input {
+    color: #2E7D32;
+}
+
+/* 错误答案 */
+.cell.incorrect {
+    background: #FFCDD2 !important;
+}
+
+.cell.incorrect .cell-input {
+    color: #C62828;
+}
+
+/* ===== 当前单词提示 ===== */
+.current-word-display {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #f0f4f8;
+    border-radius: 8px;
+    text-align: center;
+    color: #555;
+    font-size: 0.9rem;
+    border-left: 4px solid #2196F3;
+}
+
+.current-word-display strong {
+    color: #1976D2;
+}
+
+/* ===== 提示区域 ===== */
+.hints-section {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 650px;
+    overflow-y: auto;
+}
+
+.hints-section h2 {
+    color: #333;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #2196F3;
+    font-size: 1.1rem;
+}
+
+.hints-group {
+    margin-bottom: 18px;
+}
+
+.hints-group h3 {
+    color: #1976D2;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hints-group h3::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 14px;
+    background: #2196F3;
+    border-radius: 2px;
+}
+
+.hints-list {
+    list-style: none;
+}
+
+.hint-item {
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    border: 1px solid transparent;
+    font-size: 0.85rem;
+}
+
+.hint-item:hover {
+    background: #f5f5f5;
+    border-color: #e0e0e0;
+}
+
+.hint-item.active {
+    background: #BBDEFB;
+    border-color: #2196F3;
+}
+
+.hint-item.completed {
+    opacity: 0.5;
+}
+
+.hint-item.completed .hint-text {
+    text-decoration: line-through;
+}
+
+.hint-number {
+    background: #2196F3;
+    color: white;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.hint-item.completed .hint-number {
+    background: #4CAF50;
+}
+
+.hint-text {
+    color: #555;
+    line-height: 1.4;
+}
+
+/* ===== 状态栏 ===== */
+.status-bar {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+}
+
+.status-bar span {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.status-bar strong {
+    color: #333;
+    font-family: 'Courier New', monospace;
+}
+
+/* ===== 弹窗 ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    transform: scale(0.9);
+    transition: transform 0.3s;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-overlay.active .modal {
+    transform: scale(1);
+}
+
+.modal-icon {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.modal h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.modal p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.modal-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+.modal-stat {
+    text-align: center;
+}
+
+.modal-stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.modal-stat-label {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* ===== 响应式设计 ===== */
+
+/* 平板 */
+@media (max-width: 900px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .grid-section {
+        order: 1;
+        align-self: center;
+    }
+    
+    .hints-section {
+        order: 2;
+        max-width: 100%;
+        max-height: 300px;
+    }
+    
+    .cell {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+    }
+    
+    .cell-input {
+        font-size: 14px;
+    }
+    
+    .cell-number {
+        font-size: 8px;
+    }
+}
+
+/* 手机 */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 12px 15px;
+    }
+    
+    .header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .btn {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+    
+    .cell {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        min-height: 24px;
+    }
+    
+    .cell-input {
+        font-size: 12px;
+    }
+    
+    .cell-number {
+        font-size: 7px;
+    }
+    
+    .grid-section {
+        padding: 10px;
+    }
+    
+    .hints-section {
+        padding: 12px;
+        max-height: 250px;
+    }
+    
+    .status-bar {
+        gap: 20px;
+        padding: 10px 15px;
+    }
+}
+
+/* 超小屏幕 */
+@media (max-width: 420px) {
+    .cell {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+    }
+    
+    .cell-input {
+        font-size: 10px;
+    }
+    
+    .cell-number {
+        font-size: 6px;
+        top: 0;
+        left: 1px;
+    }
+}
+
+/* 自定义滚动条 */
+.hints-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.hints-section::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.hints-section::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 3px;
+}
+
+.hints-section::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* 网格容器滚动条 */
+.grid-section::-webkit-scrollbar {
+    height: 6px;
+}
+
+.grid-section::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.grid-section::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 3px;
+}
+/* ===== 显示答案按钮 ===== */
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+/* 答案显示的样式 */
+.cell.revealed {
+    background: #fff3cd !important;
+}
+
+.cell.revealed .cell-input {
+    color: #856404;
+    font-style: italic;
+}

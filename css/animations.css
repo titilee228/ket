@@ -1,0 +1,347 @@
+/* ==========================================
+   动画效果样式表
+   ========================================== */
+
+/* ---------- 格子动画 ---------- */
+
+/* 输入动画 */
+@keyframes cellInput {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.cell-input-animate {
+    animation: cellInput 0.2s ease;
+}
+
+/* 正确动画 */
+@keyframes cellCorrect {
+    0% { 
+        background-color: var(--success-light);
+        transform: scale(1);
+    }
+    30% { 
+        background-color: var(--success-color);
+        transform: scale(1.1);
+    }
+    100% { 
+        background-color: var(--success-light);
+        transform: scale(1);
+    }
+}
+
+.cell-correct-animate {
+    animation: cellCorrect 0.5s ease;
+}
+
+/* 错误抖动动画 */
+@keyframes cellIncorrect {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+.cell-incorrect-animate {
+    animation: cellIncorrect 0.4s ease;
+    background-color: var(--error-light) !important;
+}
+
+/* 单词完成动画 */
+@keyframes wordComplete {
+    0% { 
+        background-color: inherit;
+        box-shadow: none;
+    }
+    50% { 
+        background-color: var(--secondary-light);
+        box-shadow: 0 0 15px var(--secondary-color);
+    }
+    100% { 
+        background-color: var(--success-light);
+        box-shadow: none;
+    }
+}
+
+.word-complete-animate {
+    animation: wordComplete 0.5s ease;
+}
+
+/* ---------- 波纹效果 ---------- */
+.cell {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: rippleEffect 0.6s ease-out;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+@keyframes rippleEffect {
+    to {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+/* ---------- 庆祝动画 ---------- */
+@keyframes celebrateBounce {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    20% { transform: scale(1.05) rotate(-2deg); }
+    40% { transform: scale(1.08) rotate(2deg); }
+    60% { transform: scale(1.05) rotate(-1deg); }
+    80% { transform: scale(1.02) rotate(1deg); }
+}
+
+.celebrate-bounce {
+    animation: celebrateBounce 1s ease;
+}
+
+/* ---------- 彩带效果 ---------- */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg) scale(0.5);
+    }
+}
+
+/* 不同形状的彩带 */
+.confetti:nth-child(odd) {
+    border-radius: 50%;
+}
+
+.confetti:nth-child(even) {
+    border-radius: 2px;
+    transform: rotate(45deg);
+}
+
+.confetti:nth-child(3n) {
+    width: 8px;
+    height: 12px;
+    border-radius: 0;
+}
+
+/* ---------- 滑入动画 ---------- */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in-right {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.3s ease forwards;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.3s ease forwards;
+}
+
+/* ---------- 通用动画 ---------- */
+
+/* 抖动 */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease;
+}
+
+/* 脉冲 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 0.3s ease;
+}
+
+/* 渐入 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* 弹跳 */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.bounce {
+    animation: bounce 0.5s ease infinite;
+}
+
+/* 旋转 */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* ---------- 提示高亮动画 ---------- */
+@keyframes hintHighlight {
+    0% { background-color: transparent; }
+    50% { background-color: var(--primary-light); }
+    100% { background-color: var(--primary-light); }
+}
+
+.hint-item.active {
+    animation: hintHighlight 0.3s ease forwards;
+}
+
+/* ---------- 弹窗动画 ---------- */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-overlay.active .modal {
+    animation: modalSlideIn 0.3s ease forwards;
+}
+
+/* ---------- 加载动画 ---------- */
+@keyframes loadingDots {
+    0%, 20% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.loading-dots span {
+    animation: loadingDots 1.4s infinite;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* ---------- 禁用动画 ---------- */
+.animations-disabled *,
+.animations-disabled *::before,
+.animations-disabled *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
+
+/* ---------- 减弱动画（无障碍） ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ---------- 星星爆炸效果 ---------- */
+.stars-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD700"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>');
+    background-size: contain;
+    animation: starBurst 0.8s ease-out forwards;
+}
+
+@keyframes starBurst {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) scale(1) rotate(360deg);
+        opacity: 0;
+    }
+}

@@ -1,0 +1,303 @@
+<!-- 统计面板弹窗 -->
+<style type="text/css">
+    /* ==========================================
+   统计面板样式
+   ========================================== */
+
+.statistics-modal {
+    max-width: 500px;
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.stat-card {
+    background: var(--gray-50);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+}
+
+.stats-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.stats-section h3 {
+    font-size: 1rem;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.streak-display {
+    display: flex;
+    justify-content: space-around;
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    border-radius: var(--radius-md);
+    color: white;
+}
+
+.streak-item {
+    text-align: center;
+}
+
+.streak-value {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.streak-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.best-times {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.best-time-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+}
+
+.difficulty-label {
+    font-weight: 500;
+}
+
+.time-value {
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.total-time {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    text-align: center;
+    padding: var(--spacing-md);
+    background: var(--gray-50);
+    border-radius: var(--radius-md);
+}
+
+</style>
+<div id="statistics-modal" class="modal-overlay">
+    <div class="modal statistics-modal">
+        <div class="modal-header">
+            <h2 data-i18n="statistics.title">游戏统计</h2>
+            <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <!-- 总览统计 -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-games-played">0</div>
+                    <div class="stat-label" data-i18n="statistics.gamesPlayed">游戏次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-games-completed">0</div>
+                    <div class="stat-label" data-i18n="statistics.gamesCompleted">完成次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-completion-rate">0%</div>
+                    <div class="stat-label" data-i18n="statistics.completionRate">完成率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-words-completed">0</div>
+                    <div class="stat-label" data-i18n="statistics.wordsCompleted">完成单词</div>
+                </div>
+            </div>
+            
+            <!-- 连胜记录 -->
+            <div class="stats-section">
+                <h3>🔥 连胜记录</h3>
+                <div class="streak-display">
+                    <div class="streak-item">
+                        <span class="streak-value" id="stat-current-streak">0</span>
+                        <span class="streak-label" data-i18n="statistics.currentStreak">当前连胜</span>
+                    </div>
+                    <div class="streak-item">
+                        <span class="streak-value" id="stat-best-streak">0</span>
+                        <span class="streak-label" data-i18n="statistics.bestStreak">最佳连胜</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 最佳时间 -->
+            <div class="stats-section">
+                <h3 data-i18n="statistics.bestTimes">🏆 最佳时间</h3>
+                <div class="best-times">
+                    <div class="best-time-item">
+                        <span class="difficulty-label" data-i18n="difficulty.easy">简单</span>
+                        <span class="time-value" id="best-time-easy">--:--</span>
+                    </div>
+                    <div class="best-time-item">
+                        <span class="difficulty-label" data-i18n="difficulty.medium">中等</span>
+                        <span class="time-value" id="best-time-medium">--:--</span>
+                    </div>
+                    <div class="best-time-item">
+                        <span class="difficulty-label" data-i18n="difficulty.hard">困难</span>
+                        <span class="time-value" id="best-time-hard">--:--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 总用时 -->
+            <div class="stats-section">
+                <h3 data-i18n="statistics.totalTime">⏱️ 总用时</h3>
+                <div class="total-time" id="stat-total-time">0小时 0分钟</div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button id="btn-close-stats" class="btn btn-primary" data-i18n="buttons.close">
+                关闭
+            </button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    /**
+ * 统计面板控制器
+ */
+const StatisticsController = {
+    /**
+     * 初始化
+     */
+    init() {
+        this._bindEvents();
+    },
+    
+    /**
+     * 绑定事件
+     */
+    _bindEvents() {
+        document.getElementById('btn-close-stats')?.addEventListener('click', () => {
+            this.close();
+        });
+        
+        document.getElementById('statistics-modal')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                this.close();
+            }
+        });
+    },
+    
+    /**
+     * 打开统计面板
+     */
+    open() {
+        this._updateDisplay();
+        document.getElementById('statistics-modal')?.classList.add('active');
+        
+        // 数字动画
+        if (AnimationManager.enabled) {
+            this._animateNumbers();
+        }
+    },
+    
+    /**
+     * 关闭统计面板
+     */
+    close() {
+        document.getElementById('statistics-modal')?.classList.remove('active');
+    },
+    
+    /**
+     * 更新显示
+     */
+    _updateDisplay() {
+        const stats = StorageManager.getStatistics() || {};
+        
+        // 基础统计
+        document.getElementById('stat-games-played').textContent = 
+            stats.totalGamesPlayed || 0;
+        document.getElementById('stat-games-completed').textContent = 
+            stats.totalGamesCompleted || 0;
+        document.getElementById('stat-words-completed').textContent = 
+            stats.totalWordsCompleted || 0;
+        
+        // 完成率
+        const rate = stats.totalGamesPlayed > 0 
+            ? Math.round((stats.totalGamesCompleted / stats.totalGamesPlayed) * 100)
+            : 0;
+        document.getElementById('stat-completion-rate').textContent = rate + '%';
+        
+        // 连胜
+        document.getElementById('stat-current-streak').textContent = 
+            stats.streaks?.current || 0;
+        document.getElementById('stat-best-streak').textContent = 
+            stats.streaks?.best || 0;
+        
+        // 最佳时间
+        const bestTimes = stats.bestTimes || {};
+        ['easy', 'medium', 'hard'].forEach(diff => {
+            const el = document.getElementById(`best-time-${diff}`);
+            if (el) {
+                el.textContent = bestTimes[diff] 
+                    ? Utils.formatTime(bestTimes[diff])
+                    : '--:--';
+            }
+        });
+        
+        // 总用时
+        const totalSeconds = stats.totalTimePlayed || 0;
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        document.getElementById('stat-total-time').textContent = 
+            `${hours}${I18n.t('time.hours')} ${minutes}${I18n.t('time.minutes')}`;
+    },
+    
+    /**
+     * 数字动画效果
+     */
+    _animateNumbers() {
+        const stats = StorageManager.getStatistics() || {};
+        
+        const animations = [
+            ['stat-games-played', 0, stats.totalGamesPlayed || 0],
+            ['stat-games-completed', 0, stats.totalGamesCompleted || 0],
+            ['stat-words-completed', 0, stats.totalWordsCompleted || 0]
+        ];
+        
+        animations.forEach(([id, from, to], index) => {
+            const el = document.getElementById(id);
+            if (el) {
+                setTimeout(() => {
+                    AnimationManager.countUp(el, from, to, 800);
+                }, index * 150);
+            }
+        });
+    }
+};
+</script>

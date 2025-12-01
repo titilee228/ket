@@ -1,0 +1,80 @@
+<!-- 使用 data-i18n 属性标记需要翻译的元素 -->
+
+<!-- 标题 -->
+<h1 data-i18n="app.title">英语填字游戏</h1>
+
+<!-- 按钮 -->
+<button id="btn-new-game" class="btn btn-primary">
+    <span class="btn-icon">🎮</span>
+    <span data-i18n="buttons.newGame">新游戏</span>
+</button>
+
+<button id="btn-check" class="btn btn-success">
+    <span class="btn-icon">✓</span>
+    <span data-i18n="buttons.check">检查</span>
+</button>
+
+<!-- 难度选择 -->
+<select id="difficulty-select" class="difficulty-select">
+    <option value="easy" data-i18n="difficulty.easy">简单</option>
+    <option value="medium" data-i18n="difficulty.medium" selected>中等</option>
+    <option value="hard" data-i18n="difficulty.hard">困难</option>
+</select>
+
+<!-- 语言选择 -->
+<div class="language-selector">
+    <button id="btn-language" class="btn btn-icon" title="语言">
+        🌐
+    </button>
+    <div class="language-dropdown hidden">
+        <button class="language-option" data-lang="zh">中文</button>
+        <button class="language-option" data-lang="en">English</button>
+        <button class="language-option" data-lang="ja">日本語</button>
+    </div>
+</div>
+
+<!-- 提示面板 -->
+<h2 class="hints-title">
+    <span class="hints-title-icon">📖</span>
+    <span data-i18n="hints.title">单词提示</span>
+</h2>
+
+<h3 class="hints-group-title" data-i18n="hints.across">横向</h3>
+<h3 class="hints-group-title" data-i18n="hints.down">纵向</h3>
+
+<!-- 状态栏 -->
+<span data-i18n="status.time">用时</span>
+<span data-i18n="status.progress">进度</span>
+
+<!-- 完成弹窗 -->
+<h2 class="modal-title" data-i18n="complete.title">🎉 恭喜完成！</h2>
+<p class="modal-message" data-i18n="complete.subtitle">你成功完成了这个填字游戏</p>
+
+<!-- 设置面板 -->
+<div class="settings-panel">
+    <h2 data-i18n="settings.title">设置</h2>
+    
+    <div class="setting-item">
+        <label data-i18n="settings.language">语言</label>
+        <select id="setting-language">
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+        </select>
+    </div>
+    
+    <div class="setting-item">
+        <label data-i18n="settings.sound">音效</label>
+        <input type="checkbox" id="setting-sound" checked>
+    </div>
+    
+    <div class="setting-item">
+        <label data-i18n="settings.animations">动画效果</label>
+        <input type="checkbox" id="setting-animations" checked>
+    </div>
+    
+    <div class="setting-item">
+        <label data-i18n="settings.darkMode">深色模式</label>
+        <input type="checkbox" id="setting-dark-mode">
+    </div>
+</div>

@@ -1,0 +1,735 @@
+/**
+ * ==========================================
+ * 填字游戏 - 响应式样式表
+ * ==========================================
+ */
+
+/* ========== 大屏幕 (>= 1200px) ========== */
+@media (min-width: 1200px) {
+    .game-container {
+        max-width: 1400px;
+    }
+    
+    .hints-section {
+        max-width: 400px;
+    }
+}
+
+/* ========== 中等屏幕 / 平板横屏 (992px - 1199px) ========== */
+@media (max-width: 1199px) {
+    :root {
+        --cell-size: 38px;
+        --cell-font-size: 20px;
+    }
+    
+    .game-container {
+        max-width: 100%;
+    }
+    
+    .hints-section {
+        min-width: 280px;
+    }
+}
+
+/* ========== 平板竖屏 (768px - 991px) ========== */
+@media (max-width: 991px) {
+    :root {
+        --cell-size: 36px;
+        --cell-font-size: 18px;
+        --spacing-lg: 20px;
+    }
+    
+    /* 主布局改为上下结构 */
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .grid-section {
+        order: 1;
+        align-self: center;
+    }
+    
+    .hints-section {
+        order: 2;
+        max-height: 300px;
+    }
+    
+    /* 提示面板横向滚动优化 */
+    .hints-content {
+        display: flex;
+        gap: var(--spacing-lg);
+    }
+    
+    .hints-group {
+        flex: 1;
+        min-width: 0;
+        margin-bottom: 0;
+    }
+    
+    /* 状态栏调整 */
+    .status-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .status-left,
+    .status-center,
+    .status-right {
+        justify-content: center;
+    }
+}
+
+/* ========== 手机横屏 / 大手机 (576px - 767px) ========== */
+@media (max-width: 767px) {
+    :root {
+        --cell-size: 34px;
+        --cell-font-size: 17px;
+        --cell-number-size: 9px;
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+    }
+    
+    body {
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .game-container {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-sm);
+    }
+    
+    /* 头部简化 */
+    .header {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .header-title h1 {
+        font-size: 1.25rem;
+    }
+    
+    .header-subtitle {
+        display: none;
+    }
+    
+    /* 控制栏调整 */
+    .controls {
+        gap: var(--spacing-xs);
+    }
+    
+    .controls-divider {
+        display: none;
+    }
+    
+    .btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.85rem;
+    }
+    
+    .btn .btn-text {
+        display: none;
+    }
+    
+    .btn .btn-icon {
+        margin: 0;
+    }
+    
+    .btn-icon-only {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .difficulty-select {
+        padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.85rem;
+        min-width: 80px;
+    }
+    
+    /* 网格区域 */
+    .grid-section {
+        padding: var(--spacing-md);
+    }
+    
+    .grid-wrapper {
+        padding: var(--spacing-xs);
+    }
+    
+    /* 当前单词显示 */
+    .current-word-display {
+        font-size: 0.85rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    /* 提示面板 - 可折叠 */
+    .hints-section {
+        padding: var(--spacing-md);
+        max-height: 250px;
+        transition: max-height var(--transition-normal);
+    }
+    
+    .hints-section.collapsed {
+        max-height: 50px;
+        overflow: hidden;
+    }
+    
+    .hints-section.collapsed .hints-content {
+        display: none;
+    }
+    
+    .hints-title {
+        font-size: 1rem;
+        cursor: pointer;
+    }
+    
+    .hints-title::after {
+        content: '▼';
+        font-size: 0.7rem;
+        margin-left: auto;
+        transition: transform var(--transition-fast);
+    }
+    
+    .hints-section.collapsed .hints-title::after {
+        transform: rotate(-90deg);
+    }
+    
+    .hints-content {
+        flex-direction: column;
+    }
+    
+    .hints-group {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .hint-item {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.85rem;
+    }
+    
+    .hint-number {
+        min-width: 22px;
+        height: 22px;
+        font-size: 0.75rem;
+    }
+    
+    /* 状态栏 */
+    .status-bar {
+        padding: var(--spacing-sm) var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+    
+    .status-item {
+        font-size: 0.8rem;
+    }
+    
+    .progress-bar {
+        width: 80px;
+    }
+    
+    /* 弹窗 */
+    .modal {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-sm);
+    }
+    
+    .modal-stats {
+        gap: var(--spacing-md);
+    }
+    
+    .modal-stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* ========== 小手机 (< 576px) ========== */
+@media (max-width: 575px) {
+    :root {
+        --cell-size: 30px;
+        --cell-font-size: 15px;
+        --cell-number-size: 8px;
+    }
+    
+    .game-container {
+        padding: var(--spacing-xs);
+    }
+    
+    /* 头部极简化 */
+    .header {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: var(--radius-md);
+    }
+    
+    .header-title h1 {
+        font-size: 1.1rem;
+    }
+    
+    .header-title h1 .icon {
+        font-size: 1rem;
+    }
+    
+    /* 控制栏 - 两行布局 */
+    .controls {
+        flex-wrap: wrap;
+    }
+    
+    .controls-group {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-icon-only {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .btn-icon-only .btn-icon {
+        font-size: 1rem;
+    }
+    
+    /* 网格区域 */
+    .grid-section {
+        padding: var(--spacing-sm);
+        border-radius: var(--radius-md);
+    }
+    
+    .crossword-grid {
+        border-width: 1px;
+    }
+    
+    .cell {
+        border-width: 0.5px;
+    }
+    
+    /* 提示面板 */
+    .hints-section {
+        padding: var(--spacing-sm);
+        max-height: 200px;
+        border-radius: var(--radius-md);
+    }
+    
+    .hints-title {
+        font-size: 0.9rem;
+        padding-bottom: var(--spacing-xs);
+    }
+    
+    .hints-group-title {
+        font-size: 0.8rem;
+    }
+    
+    .hint-item {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .hint-number {
+        min-width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+    }
+    
+    /* 状态栏 */
+    .status-bar {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: var(--radius-md);
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .status-left,
+    .status-center,
+    .status-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .progress-bar {
+        flex: 1;
+        max-width: none;
+    }
+    
+    /* 弹窗 */
+    .modal {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+    }
+    
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    .complete-modal .modal-icon {
+        font-size: 3rem;
+    }
+    
+    .complete-modal .modal-title {
+        font-size: 1.25rem;
+    }
+    
+    .modal-stats {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-sm);
+    }
+    
+    .modal-stat-value {
+        font-size: 1.25rem;
+    }
+    
+    .modal-stat-label {
+        font-size: 0.7rem;
+    }
+    
+    /* 设置面板 */
+    .setting-item {
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+    }
+    
+    .setting-label {
+        font-size: 0.85rem;
+    }
+    
+    .volume-control input[type="range"] {
+        width: 80px;
+    }
+}
+
+/* ========== 超小屏幕 (< 360px) ========== */
+@media (max-width: 359px) {
+    :root {
+        --cell-size: 26px;
+        --cell-font-size: 13px;
+        --cell-number-size: 7px;
+    }
+    
+    .header-title h1 {
+        font-size: 1rem;
+    }
+    
+    .btn {
+        padding: 4px 8px;
+    }
+    
+    .btn-icon-only {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .difficulty-select {
+        min-width: 70px;
+        font-size: 0.8rem;
+    }
+}
+
+/* ========== 横屏模式 ========== */
+@media (orientation: landscape) and (max-height: 500px) {
+    .game-container {
+        padding: var(--spacing-xs);
+    }
+    
+    .header {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .header-title h1 {
+        font-size: 1rem;
+    }
+    
+    .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-md);
+    }
+    
+    .header-title {
+        text-align: left;
+    }
+    
+    /* 横屏时恢复左右布局 */
+    .main-content {
+        flex-direction: row;
+    }
+    
+    .grid-section {
+        padding: var(--spacing-sm);
+    }
+    
+    .hints-section {
+        max-height: none;
+        max-width: 250px;
+    }
+    
+    .status-bar {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+
+/* ========== 高DPI屏幕 ========== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .cell {
+        border-width: 0.5px;
+    }
+    
+    .crossword-grid {
+        border-width: 1px;
+    }
+}
+
+/* ========== 触摸设备优化 ========== */
+@media (hover: none) and (pointer: coarse) {
+    /* 增大点击区域 */
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .btn-icon-only {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .hint-item {
+        min-height: 44px;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    /* 移除悬停效果 */
+    .btn:hover {
+        transform: none;
+    }
+    
+    .hint-item:hover {
+        background: transparent;
+    }
+    
+    /* 添加点击反馈 */
+    .btn:active {
+        opacity: 0.8;
+        transform: scale(0.98);
+    }
+    
+    .hint-item:active {
+        background: var(--gray-100);
+    }
+    
+    .cell:active {
+        background: var(--secondary-light);
+    }
+    
+    /* 禁用文本选择 */
+    .cell,
+    .btn,
+    .hint-item {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        user-select: none;
+    }
+}
+
+/* ========== 鼠标设备 ========== */
+@media (hover: hover) and (pointer: fine) {
+    /* 恢复悬停效果 */
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+    
+    .cell:hover:not(.black):not(.selected) {
+        background: var(--gray-100);
+    }
+}
+
+/* ========== 深色模式响应式调整 ========== */
+@media (prefers-color-scheme: dark) {
+    /* 自动深色模式下的特殊调整 */
+}
+
+[data-theme="dark"] {
+    /* 深色模式下调整边框可见性 */
+    .cell {
+        border-color: var(--gray-500);
+    }
+    
+    .crossword-grid {
+        border-color: var(--gray-400);
+    }
+}
+
+/* ========== 打印样式 ========== */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    body {
+        background: white !important;
+        padding: 20px;
+    }
+    
+    .game-container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    /* 隐藏不需要打印的元素 */
+    .header,
+    .hints-section,
+    .status-bar,
+    .modal-overlay,
+    .toast,
+    .btn {
+        display: none !important;
+    }
+    
+    /* 网格样式调整 */
+    .grid-section {
+        box-shadow: none;
+        padding: 0;
+        background: transparent;
+    }
+    
+    .grid-wrapper {
+        background: transparent;
+        padding: 0;
+    }
+    
+    .crossword-grid {
+        border: 2px solid black;
+    }
+    
+    .cell {
+        border: 1px solid black;
+    }
+    
+    .cell.black {
+        background: black !important;
+    }
+    
+    .cell-input {
+        border: none;
+        background: transparent;
+    }
+    
+    .cell.selected,
+    .cell.highlighted {
+        background: transparent;
+    }
+    
+    /* 打印提示列表 */
+    .hints-section {
+        display: block !important;
+        page-break-before: always;
+        box-shadow: none;
+        background: transparent;
+        padding: 20px 0;
+    }
+    
+    .hints-title {
+        border-bottom: 2px solid black;
+    }
+    
+    .hint-item {
+        border: none;
+        padding: 8px 0;
+        border-bottom: 1px dotted #ccc;
+    }
+    
+    .hint-number {
+        background: black;
+        color: white;
+    }
+}
+
+/* ========== 减少动画偏好 ========== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .loading-spinner {
+        animation: none;
+        border: 4px solid var(--primary-color);
+    }
+}
+
+/* ========== 高对比度模式 ========== */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #0066CC;
+        --success-color: #006600;
+        --error-color: #CC0000;
+        --gray-400: #666666;
+        --gray-500: #555555;
+    }
+    
+    .cell {
+        border-width: 2px;
+        border-color: black;
+    }
+    
+    .cell.selected::after {
+        border-width: 3px;
+    }
+    
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
+
+/* ========== 安全区域 (iPhone X+) ========== */
+@supports (padding: max(0px)) {
+    .game-container {
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+        padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+    }
+    
+    .status-bar {
+        padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+    }
+    
+    .modal {
+        padding-bottom: max(var(--spacing-xl), env(safe-area-inset-bottom));
+    }
+    
+    .toast {
+        bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px));
+    }
+}
+
+/* ========== 容器查询 (现代浏览器) ========== */
+@supports (container-type: inline-size) {
+    .grid-section {
+        container-type: inline-size;
+        container-name: grid-section;
+    }
+    
+    @container grid-section (max-width: 400px) {
+        .current-word-display {
+            font-size: 0.8rem;
+        }
+    }
+    
+    .hints-section {
+        container-type: inline-size;
+        container-name: hints-section;
+    }
+    
+    @container hints-section (max-width: 300px) {
+        .hints-group-title {
+            font-size: 0.85rem;
+        }
+        
+        .hint-item {
+            font-size: 0.8rem;
+        }
+    }
+}

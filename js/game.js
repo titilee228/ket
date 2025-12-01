@@ -1,41 +1,28 @@
 /**
  * ==========================================
- * 填字游戏 - 主模块 (已修复版)
- * 修复内容：
- * 1. 添加 window.GameController 全局暴露
- * 2. 补全 revealPuzzle (显示答案) 功能
- * 3. 添加 StorageManager 安全检查，支持无存储模块运行
- * 4. 添加智能初始化逻辑 (支持独立运行且不与 app.js 冲突)
+ * 填字游戏 - 主模块 (修复版)
+ * 修复点：
+ * 1. 自动识别是否独立运行 (兼容 aa-秒开版.html)
+ * 2. 暴露 GameController 给全局，修复按钮点击无效问题
+ * 3. 补全了“显示答案”功能
  * ==========================================
  */
 
 // ==================== 游戏配置 ====================
 
 const CONFIG = {
-    // 难度名称映射
     difficultyNames: {
         easy: '简单',
         medium: '中等',
         hard: '困难'
     },
-    
-    // 动画延迟(ms)
     animationDelay: 200,
-    
-    // 自动保存间隔(ms)
-    autoSaveInterval: 30000,
-    
-    // 本地存储键名
     storageKey: 'crossword_game_state'
 };
 
 // ==================== 工具函数 ====================
 
 const Utils = {
-    generateId() {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    },
-    
     formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
@@ -47,22 +34,14 @@ const Utils = {
 
 const EventBus = {
     events: {},
-    
     on(event, callback) {
-        if (!this.events[event]) {
-            this.events[event] = [];
-        }
+        if (!this.events[event]) this.events[event] = [];
         this.events[event].push(callback);
     },
-    
     emit(event, data) {
         if (!this.events[event]) return;
-        this.events[event].forEach(callback => {
-            try {
-                callback(data);
-            } catch (e) {
-                console.error(`Event handler error for ${event}:`, e);
-            }
+        this.events[event].forEach(cb => {
+            try { cb(data); } catch (e) { console.error(e); }
         });
     }
 };
@@ -97,7 +76,7 @@ const PuzzleLoader = {
         const index = Math.floor(Math.random() * puzzles.length);
         const puzzle = puzzles[index];
         
-        // 格式兼容：如果是旧版数组格式，进行转换
+        // 格式转换：处理压缩数组格式
         if (!puzzle.gridSize && (puzzle[0] || Array.isArray(puzzle))) {
             return this._convertPuzzleFormat(puzzle, difficulty, index);
         }
@@ -214,25 +193,22 @@ const GridManager = {
 // ==================== 验证器 ====================
 
 const Validator = {
-    validateWord(wordData) {
-        const cells = GridManager.getWordCells(wordData);
-        let currentWord = '';
-        cells.forEach(({row, col}) => {
-            const cell = GridManager.getCell(row, col);
-            currentWord += cell ? cell.char : '';
-        });
-        return currentWord === wordData.w;
-    },
-    
     validatePuzzle(puzzle) {
         const results = { isComplete: true, correctCount: 0, totalCount: puzzle.words.length, details: [] };
         
         puzzle.words.forEach(word => {
-            const isCorrect = this.validateWord(word);
+            const cells = GridManager.getWordCells(word);
+            let currentWord = '';
+            cells.forEach(({row, col}) => {
+                const cell = GridManager.getCell(row, col);
+                currentWord += cell ? cell.char : '';
+            });
+            
+            const isCorrect = currentWord === word.w;
             results.details.push({
                 wordId: `${word.d}${word.n}`,
                 isCorrect,
-                userInput: GridManager.getWordCells(word).map(c => GridManager.getCell(c.row, c.col)?.char || '')
+                userInput: cells.map(c => GridManager.getCell(c.row, c.col)?.char || '')
             });
             if (isCorrect) results.correctCount++;
             else results.isComplete = false;
@@ -272,10 +248,22 @@ const InputHandler = {
         const key = event.key;
         if (/^[a-zA-Z]$/.test(key)) {
             event.preventDefault();
-            this._inputLetter(key.toUpperCase());
+            if (GridManager.setCell(row, col, key.toUpperCase())) {
+                EventBus.emit('cell:input', { row, col, char: key.toUpperCase() });
+                this._moveCursor(1);
+            }
         } else if (key === 'Backspace') {
             event.preventDefault();
-            this._handleBackspace();
+            const cell = GridManager.getCell(row, col);
+            if (cell && cell.char) {
+                GridManager.setCell(row, col, '');
+                EventBus.emit('cell:input', { row, col, char: '' });
+            } else {
+                this._moveCursor(-1);
+                const newPos = this.selection;
+                GridManager.setCell(newPos.row, newPos.col, '');
+                EventBus.emit('cell:input', { row: newPos.row, col: newPos.col, char: '' });
+            }
         } else if (key === ' ') {
             event.preventDefault();
             this.selection.direction = this.selection.direction === 'H' ? 'V' : 'H';
@@ -289,27 +277,6 @@ const InputHandler = {
             this._moveToNextWord(event.shiftKey);
         }
     },
-
-    _inputLetter(char) {
-        if (GridManager.setCell(this.selection.row, this.selection.col, char)) {
-            EventBus.emit('cell:input', { row: this.selection.row, col: this.selection.col, char });
-            this._moveCursor(1);
-        }
-    },
-
-    _handleBackspace() {
-        const { row, col } = this.selection;
-        const cell = GridManager.getCell(row, col);
-        if (cell && cell.char) {
-            GridManager.setCell(row, col, '');
-            EventBus.emit('cell:input', { row, col, char: '' });
-        } else {
-            this._moveCursor(-1);
-            const newPos = this.selection;
-            GridManager.setCell(newPos.row, newPos.col, '');
-            EventBus.emit('cell:input', { row: newPos.row, col: newPos.col, char: '' });
-        }
-    },
     
     _handleArrowKey(key) {
         let dRow = 0, dCol = 0;
@@ -318,7 +285,6 @@ const InputHandler = {
         if (key === 'ArrowLeft') dCol = -1;
         if (key === 'ArrowRight') dCol = 1;
         
-        // 简单的移动逻辑，不跳过黑格（为了操作流畅性，通常跳过黑格更好，这里保持简单）
         const newRow = this.selection.row + dRow;
         const newCol = this.selection.col + dCol;
         const cell = GridManager.getCell(newRow, newCol);
@@ -331,11 +297,9 @@ const InputHandler = {
     },
 
     _moveCursor(delta) {
-        // 沿当前方向移动
         const { row, col, direction } = this.selection;
         let r = row, c = col;
-        if (direction === 'H') c += delta;
-        else r += delta;
+        if (direction === 'H') c += delta; else r += delta;
         
         const cell = GridManager.getCell(r, c);
         if (cell && !cell.isBlack) {
@@ -347,7 +311,6 @@ const InputHandler = {
     },
 
     _moveToNextWord(reverse) {
-        // 简化的跳词逻辑，实际项目中可增强
         const puzzle = GridManager.puzzle;
         if (!puzzle) return;
         const idx = puzzle.words.findIndex(w => w === this.selection.wordData);
@@ -363,19 +326,15 @@ const InputHandler = {
         const puzzle = GridManager.puzzle;
         if (!puzzle) return;
         
-        let word = puzzle.words.find(w => w.d === direction && this._isCellInWord(w, row, col));
+        const isInside = (w, r, c) => (w.d === 'H') ? (r === w.r && c >= w.c && c < w.c + w.w.length) : (c === w.c && r >= w.r && r < w.r + w.w.length);
+        
+        let word = puzzle.words.find(w => w.d === direction && isInside(w, row, col));
         if (!word) {
-            // 如果当前方向没找到，尝试另一方向
             const otherDir = direction === 'H' ? 'V' : 'H';
-            word = puzzle.words.find(w => w.d === otherDir && this._isCellInWord(w, row, col));
+            word = puzzle.words.find(w => w.d === otherDir && isInside(w, row, col));
             if (word) this.selection.direction = otherDir;
         }
         this.selection.wordData = word || null;
-    },
-
-    _isCellInWord(word, r, c) {
-        if (word.d === 'H') return r === word.r && c >= word.c && c < word.c + word.w.length;
-        return c === word.c && r >= word.r && r < word.r + word.w.length;
     },
     
     selectWord(wordData) {
@@ -400,7 +359,6 @@ const Renderer = {
             currentWord: document.getElementById('current-word'),
             timer: document.getElementById('timer'),
             progress: document.getElementById('progress'),
-            progressBar: document.getElementById('progress-bar'),
             difficulty: document.getElementById('difficulty-display')
         };
     },
@@ -428,10 +386,8 @@ const Renderer = {
         }
         html += '</table>';
         this.elements.gridContainer.innerHTML = html;
-        this._bindGridEvents();
-    },
-    
-    _bindGridEvents() {
+        
+        // 绑定网格点击
         this.elements.gridContainer.onclick = (e) => {
             const cell = e.target.closest('.cell');
             if (cell && !cell.classList.contains('black')) {
@@ -459,19 +415,16 @@ const Renderer = {
         const container = this.elements.gridContainer;
         if (!container) return;
         
-        // 清除旧样式
         container.querySelectorAll('.cell.selected, .cell.highlighted').forEach(el => 
             el.classList.remove('selected', 'highlighted'));
         document.querySelectorAll('.hint-item.active').forEach(el => el.classList.remove('active'));
         
         if (selection.wordData) {
-            // 高亮单词
             GridManager.getWordCells(selection.wordData).forEach(({row, col}) => {
                 const cell = container.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
                 if (cell) cell.classList.add('highlighted');
             });
             
-            // 高亮提示
             const hint = document.querySelector(`.hint-item[data-word-id="${selection.wordData.d}${selection.wordData.n}"]`);
             if (hint) {
                 hint.classList.add('active');
@@ -484,7 +437,6 @@ const Renderer = {
             }
         }
         
-        // 选中格子
         if (selection.row >= 0) {
             const cell = container.querySelector(`.cell[data-row="${selection.row}"][data-col="${selection.col}"]`);
             if (cell) cell.classList.add('selected');
@@ -541,12 +493,10 @@ const Timer = {
             Renderer.updateTimer(this.seconds);
         }, 1000);
     },
-    
     pause() {
         clearInterval(this.interval);
         this.interval = null;
     },
-    
     reset() {
         this.pause();
         this.seconds = 0;
@@ -567,7 +517,7 @@ const GameController = {
         this._bindEvents();
         this._bindButtons();
         
-        // 标记已初始化，防止 app.js 重复初始化
+        // 关键：标记已初始化，防止 app.js 重复初始化
         window.CROSSWORD_GAME_INITIALIZED = true;
     },
     
@@ -575,11 +525,9 @@ const GameController = {
         EventBus.on('selection:change', sel => Renderer.updateSelection(sel));
         EventBus.on('cell:input', ({row, col}) => {
             Renderer.updateCell(row, col);
-            // 这里可以添加自动检查逻辑
         });
         
         document.addEventListener('keydown', (e) => {
-            // 如果焦点不在输入框上，则处理键盘事件
             if (!e.target.classList.contains('cell-input')) {
                 InputHandler.handleKeyDown(e);
             }
@@ -599,7 +547,7 @@ const GameController = {
         });
         bind('btn-check', this.checkAnswers);
         bind('btn-hint', this.revealLetter);
-        bind('btn-reveal', this.revealPuzzle); // 新增：显示答案
+        bind('btn-reveal', this.revealPuzzle); // 绑定显示答案按钮
         bind('btn-reset', this.resetPuzzle);
         bind('btn-next-puzzle', () => this.newGame(this.currentDifficulty));
     },
@@ -637,18 +585,18 @@ const GameController = {
         const results = Validator.validatePuzzle(this.currentPuzzle);
         Renderer.showValidationResult(results);
         
-        // 安全调用 StorageManager
-        if (results.isComplete && typeof StorageManager !== 'undefined') {
-            StorageManager.updateStatistics({
-                completed: true,
-                time: Timer.getTime(),
-                words: results.totalCount,
-                difficulty: this.currentDifficulty
-            });
-        }
-        
         if (results.isComplete) {
             Timer.pause();
+            
+            // 安全调用 StorageManager（防止报错）
+            if (typeof StorageManager !== 'undefined') {
+                StorageManager.updateStatistics({
+                    completed: true,
+                    time: Timer.getTime(),
+                    words: results.totalCount,
+                    difficulty: this.currentDifficulty
+                });
+            }
             alert(`恭喜！完成时间：${Utils.formatTime(Timer.getTime())}`);
         }
     },
@@ -662,10 +610,8 @@ const GameController = {
         }
     },
     
-    // 新增：显示所有答案 (参考 4.5-2)
     revealPuzzle() {
         if (!this.currentPuzzle || !confirm('确定要显示所有答案吗？挑战将结束。')) return;
-        
         Timer.pause();
         const { rows, cols } = GridManager.getSize();
         for(let r=0; r<rows; r++) {
@@ -678,7 +624,7 @@ const GameController = {
             }
         }
         this.isPlaying = false;
-        Renderer.showValidationResult({ details: [] }); // 清除红绿验证色
+        Renderer.showValidationResult({ details: [] });
     },
     
     resetPuzzle() {
@@ -696,30 +642,21 @@ const GameController = {
     },
     
     // 供 App 调用
-    saveCurrentState() {
-        if (!this.currentPuzzle || typeof StorageManager === 'undefined') return null;
-        // 实现略，参考原版
-        return {};
-    },
-    
-    restoreSavedGame() {
-        if (typeof StorageManager === 'undefined') return false;
-        // 实现略
-        return false;
-    }
+    saveCurrentState() { return {}; },
+    restoreSavedGame() { return false; }
 };
 
 // ==================== 暴露与初始化 ====================
 
-// 1. 暴露给全局，确保 HTML onclick 和 app.js 能访问
+// 1. 暴露给全局 (修复 aa-秒开版.html 报错)
 window.GameController = GameController;
 
-// 2. 智能初始化：如果 app.js 没有在 100ms 内接管，且是独立页面，则自动启动
-// 这解决了 "aa-秒开版.html" 可能不引入 app.js 导致的无法启动问题，同时避免了冲突
+// 2. 智能初始化 (修复无法启动问题)
+// 如果 100ms 内没有其他脚本（如 app.js）接管，则自动启动
 setTimeout(() => {
     if (!window.CROSSWORD_APP_INITIALIZED) {
-        console.log('🚀 检测到独立运行模式，自动启动游戏...');
+        console.log('🚀 独立模式启动...');
         GameController.init();
-        GameController.newGame('easy');
+        GameController.newGame('medium');
     }
 }, 100);
